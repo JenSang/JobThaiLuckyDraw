@@ -612,11 +612,19 @@
       targetCtx.stroke();
 
       if(seg.sweep > 2){
-        // Consistent orientation for every segment (same reading direction all the way around).
+        // Text on the left/bottom half of the wheel would render upside-down (and
+        // spill past the segment) if drawn with the same anchor as the right half,
+        // because the rotated coordinate frame flips past 90°. Flip it here so every
+        // label stays legible and inside its own slice.
         const midDeg = seg.start + seg.sweep/2;
-        const rotAngle = midDeg*Math.PI/180 - Math.PI/2;
-        const align = 'right';
-        const xPos = rSeg*0.82;
+        let rotAngle = midDeg*Math.PI/180 - Math.PI/2;
+        let align = 'right';
+        let xPos = rSeg*0.82;
+        if(midDeg > 90 && midDeg < 270){
+          rotAngle += Math.PI;
+          align = 'left';
+          xPos = -rSeg*0.82;
+        }
         targetCtx.save();
         targetCtx.translate(cx,cy);
         targetCtx.rotate(rotAngle);
