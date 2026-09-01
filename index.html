@@ -628,23 +628,18 @@
       targetCtx.stroke();
 
       if(seg.sweep > 2){
-        // Text on the left/bottom half of the wheel would render upside-down (and
-        // spill past the segment) if drawn with the same anchor as the right half,
-        // because the rotated coordinate frame flips past 90°. Flip it here so every
-        // label stays legible and inside its own slice.
+        // Consistent reading direction for every segment, matching how real prize
+        // wheels are printed: all labels read from the rim toward the center
+        // (outside → in). Labels on the right half will look upside-down while at
+        // rest, which is expected — once a segment spins up to the pointer, it reads
+        // upright there.
         const midDeg = seg.start + seg.sweep/2;
-        let rotAngle = midDeg*Math.PI/180 - Math.PI/2;
-        let align = 'right';
-        let xPos = rSeg*0.82;
-        if(midDeg > 180 && midDeg < 360){
-          rotAngle += Math.PI;
-          align = 'left';
-          xPos = -rSeg*0.82;
-        }
+        const rotAngle = midDeg*Math.PI/180 + Math.PI/2;
+        const xPos = -rSeg*0.82;
         targetCtx.save();
         targetCtx.translate(cx,cy);
         targetCtx.rotate(rotAngle);
-        targetCtx.textAlign = align;
+        targetCtx.textAlign = 'left';
         targetCtx.fillStyle = fontColor || '#ffffff';
         const scaledFont = fontSize * (size/640);
         targetCtx.font = `600 ${scaledFont}px Kanit, sans-serif`;
