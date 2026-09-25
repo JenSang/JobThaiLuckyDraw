@@ -156,7 +156,7 @@
 
   .wheel-wrap{
     position:relative;
-    width: clamp(260px, 68vmin, 900px);
+    width: clamp(312px, 81.6vmin, 1080px);
     aspect-ratio: 1/1;
     margin: clamp(46px,9vw,72px) auto 6px;
     animation: wheelPop .55s cubic-bezier(.2,1.4,.4,1) .05s both;
@@ -165,8 +165,8 @@
   @keyframes wheelPop{ from{ opacity:0; transform:scale(0.9);} to{ opacity:1; transform:scale(1);} }
 
   .pointer{
-    position:absolute; top: -18%; left:50%; transform:translateX(-50%);
-    width: 28%; height: 28%; z-index:6;
+    position:absolute; top: -13.3%; left:50%; transform:translateX(-50%);
+    width: 22.4%; height: 22.4%; z-index:6;
     filter: drop-shadow(0 8px 10px rgba(0,0,0,0.35));
   }
   .wheel-ring{
@@ -212,7 +212,7 @@
     50%, 100%{ opacity:0.3; background:#FFD9A0; box-shadow:none; }
   }
   .hub{
-    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%) translateZ(0);
     width: 16.8%; height:16.8%;
     border-radius:50%;
     background: radial-gradient(circle at 35% 30%, #3a4b68, var(--jt-navy) 70%);
@@ -225,11 +225,14 @@
     user-select:none;
     transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
     touch-action: manipulation;
+    isolation: isolate;
+    will-change: transform;
+    backface-visibility: hidden;
   }
-  .hub.idle-pulse{ animation: hubIdlePulse 2.4s ease-in-out infinite; } /* keep in sync with rimChase's duration and JS cycleSeconds */
+  .hub.idle-pulse{ animation: hubIdlePulse 1.5s ease-in-out infinite; }
   @keyframes hubIdlePulse{
-    0%, 100%{ transform: translate(-50%,-50%) scale(1); }
-    50%{ transform: translate(-50%,-50%) scale(0.88); }
+    0%, 100%{ transform: translate(-50%,-50%) translateZ(0) scale(1); }
+    50%{ transform: translate(-50%,-50%) translateZ(0) scale(0.88); }
   }
   .hub:hover{
     transform: translate(-50%,-50%) scale(1.08);
@@ -237,12 +240,8 @@
     filter: brightness(1.15);
   }
   .hub:active{ transform: translate(-50%,-50%) scale(0.94); }
-  .hub.disabled{ cursor:not-allowed; opacity:0.7; }
-  .hub.disabled:hover{ transform: translate(-50%,-50%); box-shadow: 0 8px 18px rgba(0,0,0,0.3); filter:none; }
-
-  .spin-hint{
-    font-size: 15px; color: #9a8b78; text-align:center; margin-top: 4px; user-select:none;
-  }
+  .hub.disabled{ cursor:not-allowed; filter: brightness(0.82) saturate(0.85); }
+  .hub.disabled:hover{ transform: translate(-50%,-50%) translateZ(0); box-shadow: 0 8px 18px rgba(0,0,0,0.3); }
 
   #confetti-canvas{ position:fixed; inset:0; pointer-events:none; z-index:50; }
 
@@ -490,7 +489,6 @@
     <div class="rim-lights" id="rimLights"></div>
     <div class="hub" id="spinBtn">SPIN</div>
   </div>
-  <div class="spin-hint">กด SPIN หรือลากวงล้อเพื่อหมุน</div>
 </div>
 
 <canvas id="confetti-canvas"></canvas>
